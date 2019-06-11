@@ -24,29 +24,6 @@ function print_array {
 ## Main 
 ## 
 
-## mg. Testing new way to read parameter from command line.
-## Detecting parameters on the command line
-#if [ "$#" -eq 0 ]; then 
-#    echo "No parameters"
-#    print_usage()
-#    exit 1
-#fi
-## If just one argument, maybe the parameters are inside a string.
-#if [ "$#" -eq 1 ]; then
-#    ii=0
-#    for ff in $1; do
-#        RRD_FILES[$ii]=$ff    
-#        ((ii++))
-#    done
-#else
-#    # Otherwise, just put each argument inside the array.
-#    for ff in $@; do
-#        RRD_FILES[ii]=$ff
-#        ((ii++))
-#    done
-#fi
-# mg. End.
-
 # Provide the command line options in a array.
 readonly CMD_OPTS=( "$@" )
 
@@ -96,15 +73,8 @@ else
     echo "Parameters left: $#"
 fi
 
-# ----------------- Remove this exit after testing !!!! -------------
-exit 0
-
-#####
-## 
-## Rest of program
-##
-####
-
+readonly RRD_FILES=( "$@" )
+echo "mg. RRD_FILES: ${RRD_FILES[@]}"
 
 # Print array.
 print_array "${RRD_FILES[@]}"
