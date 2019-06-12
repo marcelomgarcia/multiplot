@@ -87,6 +87,7 @@ RRD_FIRST=`rrdtool first ${RRD_FILES[0]}`
 RRD_LAST=`rrdtool last ${RRD_FILES[0]}`
 RRD_PLOT_CMD="${RRDTOOL} graph ${PLOT_NAME} "
 RRD_PLOT_CMD="${RRD_PLOT_CMD} --start $RRD_FIRST --end $RRD_LAST "
+RRD_PLOT_CMD="${RRD_PLOT_CMD} --width 640 --height 480 "
 for ff in ${RRD_FILES[@]}; do
     RRD_PROPERTY=`basename $ff .rrd`
     RRD_PLOT_CMD="${RRD_PLOT_CMD} DEF:ds${ii}=${ff}:sum:AVERAGE "
