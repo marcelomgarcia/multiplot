@@ -26,7 +26,8 @@ function print_array {
 # Provide the command line options in a array.
 readonly CMD_OPTS=( "$@" )
 
-help_note_text="Use '$PROGRAM --help' for more information."
+help_note_text="Syntax: $PROGRAM [-h|--help] or [-w|--width] [-g|--height] rrd1, rrd2,...,rrd6"
+
 if ! OPTS="$( getopt -n $PROGRAM -o "hw:g:" -l "help,width,height:" -- "$@" )"; then
     echo "$help_note_text"
     exit 1
