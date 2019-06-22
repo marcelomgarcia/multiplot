@@ -4,7 +4,6 @@
 # rrdtool.vandenbogaerdt.nl/tutorial/graph.php
 # Marcelo Garcia.
 
-
 readonly PROGRAM=${0##*/}
 readonly RRDTOOL=/usr/bin/rrdtool
 
@@ -41,26 +40,26 @@ while true; do
             ;;
         (-w|--width)
             if [[ "$2" == -* ]]; then
-                # When the item that follows '-c' starts with a '-'
+                # When the item that follows '-w' starts with a '-'
                 # it is considered to be the next option and not an...
                 # argument for '-c':
                 echo "-w requires an argument."
                 echo "$help_note_text"
                 exit 1
             fi
-            GRAPH_WIDTH="$2"
+            GRAPH_WIDTH=$(echo "$2" | bc)
             shift
             ;;
         (-g|--height)
             if [[ "$2" == -* ]]; then
-                # When the item that follows '-c' starts with a '-'
+                # When the item that follows '-g' starts with a '-'
                 # it is considered to be the next option and not an...
                 # argument for '-c':
-                echo "-w requires an argument."
+                echo "-g requires an argument."
                 echo "$help_note_text"
                 exit 1
             fi
-            GRAPH_HEIGHT="$2"
+            GRAPH_HEIGHT=$(echo "$2" | bc)
             shift
             ;;
         (--)
@@ -78,18 +77,7 @@ while true; do
     shift
 done
 
-if [ "$#" -eq 0 ]; then 
-    echo "No parameters"
-    exit 1
-else
-    echo "Parameters left: $#"
-fi
-
 readonly RRD_FILES=( "$@" )
-echo "mg. RRD_FILES: ${RRD_FILES[@]}"
-
-# Print array.
-print_array "${RRD_FILES[@]}"
 
 # Plot the graph.
 ii=1
@@ -102,13 +90,14 @@ RRD_PLOT_CMD="${RRD_PLOT_CMD} --start $RRD_FIRST --end $RRD_LAST "
 # Check if "width" is defined or node.
 if [ -z ${GRAPH_WIDTH} ]; then
     GRAPH_WIDTH=640
-    RRD_PLOT_CMD="${RRD_PLOT_CMD} --width $GRAPH_WIDTH "
 fi
+RRD_PLOT_CMD="${RRD_PLOT_CMD} --width $GRAPH_WIDTH "
 # Check if "height" is defined or node.
-if [ -z ${GRAPH_HEIGHT}]; then
+if [ -z ${GRAPH_HEIGHT} ]; then
     GRAPH_HEIGHT=480
-    RRD_PLOT_CMD="${RRD_PLOT_CMD} --height $GRAPH_HEIGHT "
 fi
+RRD_PLOT_CMD="${RRD_PLOT_CMD} --height $GRAPH_HEIGHT "
+echo "mg: size: $GRAPH_WIDTH x $GRAPH_HEIGHT"
 for ff in ${RRD_FILES[@]}; do
     RRD_PROPERTY=`basename $ff .rrd`
     RRD_PLOT_CMD="${RRD_PLOT_CMD} DEF:ds${ii}=${ff}:sum:AVERAGE "
