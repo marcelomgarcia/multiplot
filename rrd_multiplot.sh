@@ -28,7 +28,7 @@ function print_array {
 readonly CMD_OPTS=( "$@" )
 
 help_note_text="Use '$PROGRAM --help' for more information."
-if ! OPTS="$( getopt -n $PROGRAM -o "hs:" -l "help,size:" -- "$@" )"; then
+if ! OPTS="$( getopt -n $PROGRAM -o "hw:g:" -l "help,width,height:" -- "$@" )"; then
     echo "$help_note_text"
     exit 1
 fi
@@ -39,16 +39,28 @@ while true; do
         (-h|--help)
             echo "$help_note_text"
             ;;
-        (-s|--size)
+        (-w|--width)
             if [[ "$2" == -* ]]; then
                 # When the item that follows '-c' starts with a '-'
                 # it is considered to be the next option and not an...
                 # argument for '-c':
-                echo "-c requires an argument."
+                echo "-w requires an argument."
                 echo "$help_note_text"
                 exit 1
             fi
-            GRAPH_SIZE="$2"
+            GRAPH_WIDTH="$2"
+            shift
+            ;;
+        (-g|--height)
+            if [[ "$2" == -* ]]; then
+                # When the item that follows '-c' starts with a '-'
+                # it is considered to be the next option and not an...
+                # argument for '-c':
+                echo "-w requires an argument."
+                echo "$help_note_text"
+                exit 1
+            fi
+            GRAPH_HEIGHT="$2"
             shift
             ;;
         (--)
@@ -87,7 +99,16 @@ RRD_FIRST=`rrdtool first ${RRD_FILES[0]}`
 RRD_LAST=`rrdtool last ${RRD_FILES[0]}`
 RRD_PLOT_CMD="${RRDTOOL} graph ${PLOT_NAME} "
 RRD_PLOT_CMD="${RRD_PLOT_CMD} --start $RRD_FIRST --end $RRD_LAST "
-RRD_PLOT_CMD="${RRD_PLOT_CMD} --width 640 --height 480 "
+# Check if "width" is defined or node.
+if [ -z ${GRAPH_WIDTH} ]; then
+    GRAPH_WIDTH=640
+    RRD_PLOT_CMD="${RRD_PLOT_CMD} --width $GRAPH_WIDTH "
+fi
+# Check if "height" is defined or node.
+if [ -z ${GRAPH_HEIGHT}]; then
+    GRAPH_HEIGHT=480
+    RRD_PLOT_CMD="${RRD_PLOT_CMD} --height $GRAPH_HEIGHT "
+fi
 for ff in ${RRD_FILES[@]}; do
     RRD_PROPERTY=`basename $ff .rrd`
     RRD_PLOT_CMD="${RRD_PLOT_CMD} DEF:ds${ii}=${ff}:sum:AVERAGE "
