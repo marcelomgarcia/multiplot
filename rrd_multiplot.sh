@@ -37,6 +37,7 @@ while true; do
     case "$1" in 
         (-h|--help)
             echo "$help_note_text"
+            exit 1 
             ;;
         (-w|--width)
             if [[ "$2" == -* ]]; then
