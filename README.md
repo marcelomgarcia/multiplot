@@ -4,4 +4,4 @@ Tools like Ganglia are very important in system administratrion because it allow
 
 ## Usage
 
-The script plot up to 6 _rrd_ files in a single graph. 
+The script plot up to 6 _rrd_ files in a single graph. It accepts the width and height of the graph as parameter.
