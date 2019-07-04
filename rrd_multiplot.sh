@@ -56,7 +56,7 @@ while true; do
             if [[ "$2" == -* ]]; then
                 # When the item that follows '-g' starts with a '-'
                 # it is considered to be the next option and not an...
-                # argument for '-c':
+                # argument for '-g':
                 echo "-g requires an argument."
                 echo "$help_note_text"
                 exit 1
@@ -89,12 +89,12 @@ RRD_FIRST=`rrdtool first ${RRD_FILES[0]}`
 RRD_LAST=`rrdtool last ${RRD_FILES[0]}`
 RRD_PLOT_CMD="${RRDTOOL} graph ${PLOT_NAME} "
 RRD_PLOT_CMD="${RRD_PLOT_CMD} --start $RRD_FIRST --end $RRD_LAST "
-# Check if "width" is defined or node.
+# Check if "width" wasn't define, use default value.
 if [ -z ${GRAPH_WIDTH} ]; then
     GRAPH_WIDTH=640
 fi
 RRD_PLOT_CMD="${RRD_PLOT_CMD} --width $GRAPH_WIDTH "
-# Check if "height" is defined or node.
+# Check if "height" is defined or not.
 if [ -z ${GRAPH_HEIGHT} ]; then
     GRAPH_HEIGHT=480
 fi
