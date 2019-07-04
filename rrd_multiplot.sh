@@ -28,7 +28,7 @@ readonly CMD_OPTS=( "$@" )
 
 help_note_text="Syntax: $PROGRAM [-h|--help] or [-w|--width] [-g|--height] rrd1, rrd2,...,rrd6"
 
-if ! OPTS="$( getopt -n $PROGRAM -o "hw:g:" -l "help,width,height:" -- "$@" )"; then
+if ! OPTS="$( getopt -n $PROGRAM -o "hw:g:l:" -l "help,width:,height:,legend:" -- "$@" )"; then
     echo "$help_note_text"
     exit 1
 fi
@@ -54,14 +54,20 @@ while true; do
             ;;
         (-g|--height)
             if [[ "$2" == -* ]]; then
-                # When the item that follows '-g' starts with a '-'
-                # it is considered to be the next option and not an...
-                # argument for '-g':
                 echo "-g requires an argument."
                 echo "$help_note_text"
                 exit 1
             fi
             GRAPH_HEIGHT=$(echo "$2" | bc)
+            shift
+            ;;
+        (-l|--legend)
+            if [[ "$2" == -* ]]; then
+                echo "-l requires an argument."
+                echo "$help_note_text"
+                exit 1
+            fi
+            GRAPH_LEGEND="$2"
             shift
             ;;
         (--)
@@ -80,6 +86,8 @@ while true; do
 done
 
 readonly RRD_FILES=( "$@" )
+
+echo "mg: legend: $GRAPH_LEGEND"
 
 # Plot the graph.
 ii=1
