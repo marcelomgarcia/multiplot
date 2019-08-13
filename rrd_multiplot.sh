@@ -98,8 +98,9 @@ fi
 # Check if the legend for the graphs were provided or not. 
 if [ ${#GRAPH_LEGEND[@]} -eq 0 ]; then
     LEGEND=0
+else
+    LEGEND=1
 fi
-echo "mg: legend: ${GRAPH_LEGEND[@]}"
 
 # Plot the graph.
 ii=1  # file index.
@@ -121,7 +122,7 @@ fi
 RRD_PLOT_CMD="${RRD_PLOT_CMD} --height $GRAPH_HEIGHT "
 echo "mg: size: $GRAPH_WIDTH x $GRAPH_HEIGHT"
 for ff in ${RRD_FILES[@]}; do
-    if (( LEGEND == 0 )); then
+    if (( $LEGEND == 0 )); then
         RRD_PROPERTY=`basename $ff .rrd`
     else
         RRD_PROPERTY=${GRAPH_LEGEND[cc]}
