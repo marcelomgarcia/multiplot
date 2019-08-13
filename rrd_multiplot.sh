@@ -86,7 +86,14 @@ while true; do
     shift
 done
 
+# Save the remaining parameters after processing the options. Now should
+# be only the rrd files.
 readonly RRD_FILES=( "$@" )
+if [ ${#RRD_FILES[@]} -eq 0 ]; then
+    echo $help_note_text
+    echo "Missing rrd files."
+    exit 1
+fi
 
 # Check if the legend for the graphs were provided or not. 
 if [ ${#GRAPH_LEGEND[@]} -eq 0 ]; then
